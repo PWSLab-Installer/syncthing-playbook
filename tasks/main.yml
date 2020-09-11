@@ -1,0 +1,28 @@
+---
+
+
+    -   name: Get latest Syncthing
+        shell: curl -s https://api.github.com/repos/syncthing/syncthing/releases/latest | grep browser_download_url | grep linux-amd64 | cut -d '"' -f 4 | wget -qi -
+        args:
+            chdir: /tmp/
+
+    -   name: Extract Syncthing
+        shell: tar xvf syncthing-linux-amd64*.tar.gz
+        args:
+            chdir: /tmp/
+
+    -   name: Copy Syncthing
+        shell: sudo cp syncthing-linux-amd64-*/syncthing  /usr/local/bin/
+        args:
+            chdir: /tmp/
+
+    -   name: Sets systemd file
+        template:
+            src: "syncthing.conf.j2"
+            dest: "/etc/systemd/system/syncthing@.service"
+
+    -   name: Start Syncthing
+        systemd:
+            name: syncthing@root
+            state: started
+            enabled: yes

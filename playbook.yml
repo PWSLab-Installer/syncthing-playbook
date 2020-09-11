@@ -1,0 +1,24 @@
+- hosts: localhost
+  connection: local
+  vars:
+
+
+  tasks:
+    
+    - name: Check the version of CentOS
+      command: hostnamectl
+      register: os_check
+      ignore_errors: yes
+
+    - name: Fetch Syncthing Role
+      git:
+        repo: https://ro:4gjxszxZ99pUH7AxBCDE@pwslab.org/ansible/syncthing-playbook.git
+        dest: /root/.ansible/roles/pwslab.syncthing
+        version: master
+        force: yes
+
+    - name: Installing Syncthing
+      include_role:
+        name: pwslab.syncthing
+    
+    
